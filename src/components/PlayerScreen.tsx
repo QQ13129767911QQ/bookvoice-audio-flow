@@ -116,10 +116,10 @@ export const PlayerScreen: React.FC<PlayerScreenProps> = ({ book }) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col p-6 space-y-6">
-        {/* Audio Controls - Top Section */}
-        <Card className="p-6">
-          <div className="space-y-6">
+      <div className="flex-1 flex">
+        {/* Audio Controls */}
+        <div className="w-96 bg-white border-r border-gray-200 p-6 flex flex-col">
+          <Card className="p-6 space-y-6">
             <div className="text-center">
               <h3 className="font-semibold text-gray-900 mb-2">音频控制</h3>
               <div className="text-sm text-gray-500">
@@ -163,85 +163,84 @@ export const PlayerScreen: React.FC<PlayerScreenProps> = ({ book }) => {
               </Button>
             </div>
 
-            {/* Volume and Speed Controls */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Volume Control */}
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Volume2 className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm text-gray-600">音量</span>
-                </div>
-                <Slider
-                  value={[volume]}
-                  max={100}
-                  step={1}
-                  onValueChange={handleVolumeChange}
-                  className="w-full"
-                />
+            {/* Volume Control */}
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Volume2 className="w-4 h-4 text-gray-600" />
+                <span className="text-sm text-gray-600">音量</span>
               </div>
+              <Slider
+                value={[volume]}
+                max={100}
+                step={1}
+                onValueChange={handleVolumeChange}
+                className="w-full"
+              />
+            </div>
 
-              {/* Playback Speed */}
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm text-gray-600">播放速度</span>
-                </div>
-                <div className="flex space-x-1">
-                  {[0.75, 1, 1.25, 1.5, 2].map(speed => (
-                    <Button
-                      key={speed}
-                      variant={playbackSpeed === speed ? "default" : "outline"}
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => setPlaybackSpeed(speed)}
-                    >
-                      {speed}x
-                    </Button>
-                  ))}
-                </div>
+            {/* Playback Speed */}
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Clock className="w-4 h-4 text-gray-600" />
+                <span className="text-sm text-gray-600">播放速度</span>
+              </div>
+              <div className="flex space-x-1">
+                {[0.75, 1, 1.25, 1.5, 2].map(speed => (
+                  <Button
+                    key={speed}
+                    variant={playbackSpeed === speed ? "default" : "outline"}
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setPlaybackSpeed(speed)}
+                  >
+                    {speed}x
+                  </Button>
+                ))}
               </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
 
-        {/* Transcript - Bottom Section */}
-        <Card className="flex-1 p-6">
-          <div className="h-full flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">同步逐字稿</h3>
-              <div className="text-sm text-gray-500">
-                当前播放: 第 {currentSentence + 1} 段
+        {/* Transcript */}
+        <div className="flex-1 p-6">
+          <Card className="h-full p-6">
+            <div className="h-full flex flex-col">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">同步逐字稿</h3>
+                <div className="text-sm text-gray-500">
+                  当前播放: 第 {currentSentence + 1} 段
+                </div>
               </div>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto space-y-4">
-              {transcript.map((item, index) => (
-                <div
-                  key={item.id}
-                  className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
-                    index === currentSentence
-                      ? 'bg-primary-50 border-l-4 border-primary-500 shadow-sm'
-                      : 'hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleTranscriptClick(item.time)}
-                >
-                  <div className="flex items-start space-x-3">
-                    <span className="text-sm text-gray-500 font-mono mt-1 min-w-[60px]">
-                      {formatTime(item.time)}
-                    </span>
-                    <p className={`text-sm leading-relaxed ${
+              
+              <div className="flex-1 overflow-y-auto space-y-4">
+                {transcript.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
                       index === currentSentence
-                        ? 'text-gray-900 font-medium'
-                        : 'text-gray-700'
-                    }`}>
-                      {item.text}
-                    </p>
+                        ? 'bg-primary-50 border-l-4 border-primary-500 shadow-sm'
+                        : 'hover:bg-gray-50'
+                    }`}
+                    onClick={() => handleTranscriptClick(item.time)}
+                  >
+                    <div className="flex items-start space-x-3">
+                      <span className="text-sm text-gray-500 font-mono mt-1 min-w-[60px]">
+                        {formatTime(item.time)}
+                      </span>
+                      <p className={`text-sm leading-relaxed ${
+                        index === currentSentence
+                          ? 'text-gray-900 font-medium'
+                          : 'text-gray-700'
+                      }`}>
+                        {item.text}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </div>
     </div>
   );
