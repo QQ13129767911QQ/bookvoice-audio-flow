@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, Circle, FileText, Brain, Headphones, Sync } from 'lucide-react';
+import { CheckCircle, Circle, FileText, Brain, Headphones, RefreshCw } from 'lucide-react';
 
 interface ProcessingScreenProps {
   onComplete: () => void;
@@ -32,7 +31,7 @@ export const ProcessingScreen: React.FC<ProcessingScreenProps> = ({ onComplete }
       duration: 3000
     },
     {
-      icon: <Sync className="w-6 h-6" />,
+      icon: <RefreshCw className="w-6 h-6" />,
       title: "同步处理",
       description: "生成逐字稿时间轴，完成最终处理...",
       duration: 1000
