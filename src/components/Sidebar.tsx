@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { usePlayer } from '@/hooks/use-player';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -10,19 +10,18 @@ interface SidebarProps {
   collapsed: boolean;
   onToggleCollapse: () => void;
   onViewChange: (view: 'welcome' | 'processing' | 'player') => void;
-  onBookSelect: (book: any) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   collapsed,
   onToggleCollapse,
-  onViewChange,
-  onBookSelect
+  onViewChange
 }) => {
+  const { playBook } = usePlayer();
   const [books] = useState([
-    { id: 1, title: '原则', author: 'Ray Dalio', status: 'completed', duration: '35分钟', category: '商业' },
-    { id: 2, title: '思考，快与慢', author: 'Daniel Kahneman', status: 'processing', progress: 75, category: '心理学' },
-    { id: 3, title: 'JavaScript高级程序设计', author: 'Matt Frisbie', status: 'completed', duration: '42分钟', category: '技术' }
+    { id: '1', title: '原则', author: 'Ray Dalio', status: 'completed', duration: 2100, category: '商业' },
+    { id: '2', title: '思考，快与慢', author: 'Daniel Kahneman', status: 'processing', progress: 75, duration: 0, category: '心理学' },
+    { id: '3', title: 'JavaScript高级程序设计', author: 'Matt Frisbie', status: 'completed', duration: 2520, category: '技术' }
   ]);
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,7 +30,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const categories = ['全部', '商业', '心理学', '技术', '哲学'];
 
   return (
-    <div className={`${collapsed ? 'w-16' : 'w-80'} bg-white border-r border-gray-200 flex flex-col transition-all duration-300 shadow-sm`}>
+    <div className={`${collapsed ? 'w-16' : 'w-80'} bg-white border-r border-gray-200 flex flex-col transition-all duration-300 shadow-sm h-full`}>
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -104,8 +103,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   key={book.id}
                   className="p-3 cursor-pointer hover:shadow-md transition-shadow border border-gray-100 hover:border-primary-200"
                   onClick={() => {
-                    onBookSelect(book);
                     if (book.status === 'completed') {
+                      playBook(book);
                       onViewChange('player');
                     }
                   }}
@@ -132,7 +131,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     ) : (
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-green-600 font-medium">已完成</span>
-                        <span className="text-xs text-gray-500">{book.duration}</span>
+                        <span className="text-xs text-gray-500">{Math.floor(book.duration / 60)}分钟</span>
                       </div>
                     )}
                   </div>

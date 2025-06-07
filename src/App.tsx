@@ -5,21 +5,30 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { PlayerProvider } from "./hooks/use-player";
+import { GlobalPlayer } from "./components/GlobalPlayer";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <PlayerProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <div className="relative h-screen flex flex-col">
+            <main className="flex-1 min-h-0">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <GlobalPlayer />
+          </div>
+        </BrowserRouter>
+      </PlayerProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
