@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { usePlayer } from '@/hooks/use-player';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Upload, BookOpen, User, Crown, Menu, X, Search, Filter } from 'lucide-react';
+import { BookOpen, User, Crown, Menu, X, FolderPlus } from 'lucide-react';
 import { FileUpload } from './FileUpload';
+import { Input } from './ui/input';
+import { Card } from './ui/card';
 
 interface SidebarProps {
   collapsed: boolean;
@@ -17,17 +16,45 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleCollapse,
   onViewChange
 }) => {
-  const { playBook } = usePlayer();
-  const [books] = useState([
-    { id: '1', title: '原则', author: 'Ray Dalio', status: 'completed', duration: 2100, category: '商业' },
-    { id: '2', title: '思考，快与慢', author: 'Daniel Kahneman', status: 'processing', progress: 75, duration: 0, category: '心理学' },
-    { id: '3', title: 'JavaScript高级程序设计', author: 'Matt Frisbie', status: 'completed', duration: 2520, category: '技术' }
-  ]);
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('全部');
+  const books = [
+    { id: '1', title: '三体', author: '刘慈欣' },
+    { id: '2', title: '活着', author: '余华' },
+    { id: '3', title: '原则', author: '瑞·达利欧' },
+    { id: '4', title: '思考，快与慢', author: '丹尼尔·卡尼曼' },
+    { id: '5', title: '人类简史', author: '尤瓦尔·赫拉利' },
+    { id: '6', title: '百年孤独', author: '加西亚·马尔克斯' },
+    { id: '7', title: '1984', author: '乔治·奥威尔' },
+    { id: '8', title: '小王子', author: '安托万·德·圣-埃克苏佩里' },
+    { id: '9', title: '解忧杂货店', author: '东野圭吾' },
+    { id: '10', title: '穷查理宝典', author: '查理·芒格' },
+    { id: '11', title: 'Sapiens', author: 'Yuval Noah Harari' },
+    { id: '12', title: 'The Lord of the Rings', author: 'J.R.R. Tolkien' },
+    { id: '13', title: 'To Kill a Mockingbird', author: 'Harper Lee' },
+    { id: '14', title: 'The Great Gatsby', author: 'F. Scott Fitzgerald' },
+    { id: '15', 'title': 'Pride and Prejudice', author: 'Jane Austen' },
+    { id: '16', title: 'The Catcher in the Rye', author: 'J.D. Salinger' },
+    { id: '17', title: 'Brave New World', author: 'Aldous Huxley' },
+    { id: '18', title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    { id: '19', title: 'Fahrenheit 451', author: 'Ray Bradbury' },
+    { id: '20', title: 'Moby Dick', author: 'Herman Melville' },
+  ];
 
-  const categories = ['全部', '商业', '心理学', '技术', '哲学'];
+  const handleCreateFolder = () => {
+    if (newFolderName.trim()) {
+      console.log('Creating folder:', newFolderName);
+      // Here you can add logic to handle folder creation
+      setIsCreatingFolder(false);
+      setNewFolderName('');
+    }
+  };
+
+  const handleCancelCreateFolder = () => {
+    setIsCreatingFolder(false);
+    setNewFolderName('');
+  };
 
   return (
     <div className={`${collapsed ? 'w-16' : 'w-80'} bg-white border-r border-gray-200 flex flex-col transition-all duration-300 shadow-sm h-full`}>
@@ -65,75 +92,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {!collapsed && (
-        <>
-          {/* Search and Filter */}
-          <div className="px-4 space-y-3">
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
+        <div className="px-4 pb-4 space-y-2">
+          {!isCreatingFolder ? (
+            <Button variant="outline" className="w-full justify-center text-sm font-normal" onClick={() => setIsCreatingFolder(true)}>
+              <FolderPlus className="w-4 h-4 mr-2" />
+              新建文件
+            </Button>
+          ) : (
+            <div className="space-y-2">
+              <Input 
                 type="text"
-                placeholder="搜索书籍..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder="文件夹名称..."
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                autoFocus
               />
+              <div className="flex items-center justify-end space-x-2">
+                <Button variant="ghost" size="sm" onClick={handleCancelCreateFolder}>取消</Button>
+                <Button size="sm" onClick={handleCreateFolder}>确认</Button>
+              </div>
             </div>
-            
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
-              ))}
-            </select>
-          </div>
+          )}
+        </div>
+      )}
 
-          {/* Book Library */}
+      {!collapsed && (
+        <div className="flex-1 flex flex-col min-h-0">
           <div className="flex-1 p-4 space-y-4 overflow-y-auto">
             <h3 className="text-sm font-semibold text-gray-700 flex items-center">
               <BookOpen className="w-4 h-4 mr-2" />
-              我的书库 ({books.length})
+              我的书库
             </h3>
             
-            <div className="space-y-3">
+            <div className="space-y-2">
               {books.map(book => (
                 <Card 
                   key={book.id}
                   className="p-3 cursor-pointer hover:shadow-md transition-shadow border border-gray-100 hover:border-primary-200"
-                  onClick={() => {
-                    if (book.status === 'completed') {
-                      playBook(book);
-                      onViewChange('player');
-                    }
-                  }}
                 >
-                  <div className="space-y-2">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium text-gray-900 truncate">{book.title}</h4>
-                        <p className="text-xs text-gray-500 truncate">{book.author}</p>
-                      </div>
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full ml-2">
-                        {book.category}
-                      </span>
-                    </div>
-                    
-                    {book.status === 'processing' ? (
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <span className="text-xs text-primary-600">处理中...</span>
-                          <span className="text-xs text-gray-500">{book.progress}%</span>
-                        </div>
-                        <Progress value={book.progress} className="h-1" />
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-green-600 font-medium">已完成</span>
-                        <span className="text-xs text-gray-500">{Math.floor(book.duration / 60)}分钟</span>
-                      </div>
-                    )}
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-medium text-gray-900 truncate">{book.title}</h4>
+                    <p className="text-xs text-gray-500 truncate">{book.author}</p>
                   </div>
                 </Card>
               ))}
@@ -157,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               升级到 Pro
             </Button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

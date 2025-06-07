@@ -1,4 +1,3 @@
-
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
@@ -79,53 +78,24 @@ export const FileUpload: React.FC<FileUploadProps> = ({ collapsed, onUploadStart
     <div
       {...getRootProps()}
       className={`
-        relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200
+        relative border rounded-lg p-3 text-center cursor-pointer transition-all duration-200
+        flex flex-col items-center justify-center
         ${isDragActive 
           ? 'border-primary-500 bg-primary-50' 
-          : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
+          : 'border-gray-300 bg-gray-50 hover:border-primary-400 hover:bg-gray-100'
         }
         ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}
       `}
     >
       <input {...getInputProps()} />
       
-      <div className="space-y-3">
-        <div className="flex justify-center">
-          {isUploading ? (
-            <div className="w-8 h-8 border-3 border-primary-600 border-t-transparent rounded-full animate-spin" />
-          ) : (
-            <Upload className="w-8 h-8 text-gray-400" />
-          )}
-        </div>
-        
-        <div>
-          <p className="text-sm font-medium text-gray-900">
-            {isUploading ? '正在上传...' : '上传文档'}
-          </p>
-          <p className="text-xs text-gray-500 mt-1">
-            {isDragActive ? '松开上传文件' : '拖拽文件或点击选择'}
-          </p>
-          <p className="text-xs text-gray-400 mt-2">
-            支持 PDF, EPUB, TXT
-          </p>
-        </div>
+      <div className="flex items-center text-sm font-medium text-gray-800">
+        <Plus className="w-4 h-4 mr-2" />
+        {isUploading ? '正在上传...' : '上传书籍'}
       </div>
-      
-      {/* Supported formats icons */}
-      <div className="flex justify-center space-x-4 mt-4 pt-4 border-t border-gray-200">
-        <div className="flex items-center space-x-1">
-          <FileText className="w-3 h-3 text-red-500" />
-          <span className="text-xs text-gray-500">PDF</span>
-        </div>
-        <div className="flex items-center space-x-1">
-          <FileAudio className="w-3 h-3 text-blue-500" />
-          <span className="text-xs text-gray-500">EPUB</span>
-        </div>
-        <div className="flex items-center space-x-1">
-          <FileText className="w-3 h-3 text-green-500" />
-          <span className="text-xs text-gray-500">TXT</span>
-        </div>
-      </div>
+      <p className="text-xs text-gray-500 mt-1">
+        PDF、TXT、EPUB、MOBI、AZW、AZW3
+      </p>
     </div>
   );
 };
